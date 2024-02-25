@@ -1,29 +1,36 @@
 "use client";
+
 import qs from "query-string";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import Button from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Color, Size } from "@/types";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
-import Button from "@/components/ui/button";
 
 interface FilterProps {
   data: (Size | Color)[];
   name: string;
   valueKey: string;
 }
+
 const Filter: React.FC<FilterProps> = ({ data, name, valueKey }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+
   const selectedValue = searchParams.get(valueKey);
+
   const onClick = (id: string) => {
     const current = qs.parse(searchParams.toString());
+
     const query = {
       ...current,
       [valueKey]: id,
     };
+
     if (current[valueKey] === id) {
       query[valueKey] = null;
     }
+
     const url = qs.stringifyUrl(
       {
         url: window.location.href,
@@ -31,8 +38,10 @@ const Filter: React.FC<FilterProps> = ({ data, name, valueKey }) => {
       },
       { skipNull: true }
     );
+
     router.push(url);
   };
+
   return (
     <div className="mb-8">
       <h3 className="text-lg font-semibold">{name}</h3>
@@ -55,4 +64,5 @@ const Filter: React.FC<FilterProps> = ({ data, name, valueKey }) => {
     </div>
   );
 };
+
 export default Filter;
